@@ -1,0 +1,4 @@
+When adding trace2sleep module (It's named trace2wake but it's for sleep. Sorry about that)
+you must change the reference to the touch driver from "mtk-tpd" to your own driver (like "synaptic-xxxxxx")
+
+You can find the reference at line 283, column 32. Just update the driver name within the quotation marks. That's it.
