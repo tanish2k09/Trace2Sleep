@@ -49,6 +49,8 @@ Trust me, it sounds much more complex than it is, and way harder to trigger than
 
 6) Proceed according to the corresponding "README"s and keep your brain on fire.
 
+7) Finally, to bake T2S, add the following line to your device defconfig : #CONFIG_TOUCHSCREEN_TRACE2WAKE=y
+
 
 
 
