@@ -35,9 +35,9 @@ Trust me, it sounds much more complex than it is, and way harder to trigger than
 **Here are the instructions to add t2s (the files are named trace2wake because of choosing sweep2wake as template)**
 (**Note :** If you have added sweep2wake before, adding this will be much much easier)
 
-0) **Add sweep2wake to your kernel first**
+0) * If you have sweep2wake gesture module, start with step 1, or disable it and proceed to step 5. If there is no sweep2wake, just study the commits carefully. You should find the code similar to how you would add s2w**
 
-1) Replace the given sweep2wake.c file car11ully (usually you'll only need to change the driver name at line 239, the main function, and need to remove s2w_s2sonly variable).
+1) Replace the given sweep2wake.c file carefully (usually you'll only need to change the driver name at line 239, the main function, and need to remove s2w_s2sonly variable).
 
 2) Carefully replace sweep2wake.h also, considering the added and removed variables. Rest is same.
 
