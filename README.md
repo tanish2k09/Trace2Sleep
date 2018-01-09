@@ -33,29 +33,31 @@ Trust me, it sounds much more complex than it is, and way harder to trigger than
 
 
 **Here are the instructions to add t2s (the files are named trace2wake because of choosing sweep2wake as template)**
-(**Note :** If you have added sweep2wake before, adding this will be much much easier)
+(**Note :** If you have knowledge of adding sweep2wake before, adding this will be much much easier)
 
-0) * If you have sweep2wake gesture module, start with step 1, or disable it and proceed to step 5. If there is no sweep2wake, just study the commits carefully. You should find the code similar to how you would add s2w**
+0) * If you have sweep2wake gesture module, disable it and proceed to step 5. If there is no sweep2wake, just study the commits carefully. You should find the code similar to how you would add s2w**
 
-1) Replace the given sweep2wake.c file carefully (usually you'll only need to change the driver name at line 239, the main function, and need to remove s2w_s2sonly variable).
+** Steps 1-4 are for removing sweep2sleep functionality to be able to use sweep2wake alone. *
+1) Study the given sweep2wake.c file carefully, see what code has been removed. The functions and variables are not same for all, but the basic logic is same for all drivers.
 
-2) Carefully replace sweep2wake.h also, considering the added and removed variables. Rest is same.
+2) Carefully study sweep2wake.h also, considering the added and removed variables. Rest is same.
 
 3) After successfully "porting" the custom sweep2wake.c file, (which actually functions like swipe2wake (in any direction) and removes sweep2sleep because we're trying to add trace2sleep) try to compile the kernel right now.
 
-4) If the kernel compiles, proceed to next steps. If kernel does not compile, you need to debug what you did wrong. Probably sweep2wake.c
+4) If the kernel compiles, proceed to next steps. If kernel does not compile, you need to debug what you did wrong. Probably sweep2wake.c but you may take my help on xda thread.
 
-5) Read the readme files in subdirectories to get the commits related to that part of code.
+5) Read the readme files in subdirectories to get the commits related to that part of code. Driver-specific.
 
 6) Proceed according to the corresponding "README"s and keep your brain on fire.
 
 7) Finally, to bake T2S, add the following line to your device defconfig : #CONFIG_TOUCHSCREEN_TRACE2WAKE=y
 
+ ** The current subdirectory readme commits are from my device Lenovo A7000 with  MT6752. It uses Mtk-tpd.c driver.
 
 
 
 **Credits : (all those who helped in any intentional and unintentional way)**
 1) Tanish2k09 (dat me tho)
-2) Maxr1998 (@xda-developers.com) (He accidentally provided me the correction to my code's mistakes)
+2) Maxr1998 (@xda-developers.com) (He helped debug)
 3) Dennis Rassmann (for giving us sweep2wake module which I studied to make this module)
 4) Linux and android devs also!
