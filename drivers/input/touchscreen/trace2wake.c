@@ -52,7 +52,7 @@
 /* Version, author, desc, etc */
 #define DRIVER_AUTHOR "Tanish <tanish2k09.dev@gmail.com>"
 #define DRIVER_DESCRIPTION "Trace2wake for almost any device"
-#define DRIVER_VERSION "1.0"
+#define DRIVER_VERSION "2.0"
 #define LOGTAG "[trace2wake]: "
 
 MODULE_AUTHOR(DRIVER_AUTHOR);
@@ -67,6 +67,7 @@ MODULE_LICENSE("GPLv3");
 /* Tuneables */
 #define T2W_DEBUG             0
 #define T2W_DEFAULT           1
+#define T2W_MULTITOUCH_SLEEP  2
 #define T2W_PWRKEY_DUR       60
 
 /* We are assuming the device to be 1080p res... */
@@ -93,7 +94,7 @@ MODULE_LICENSE("GPLv3");
 int t2w_switch = T2W_DEFAULT;
 static int touch_x = 0, touch_y = 0, init_x=-1, init_y=-1, init=-1;
 static bool touch_x_called = false, touch_y_called = false;
-static bool exec_count = true;
+static bool exec_count = true, checkpoint = false;
 bool t2w_scr_suspended = false;
 #ifndef WAKE_HOOKS_DEFINED
 #ifndef CONFIG_HAS_EARLYSUSPEND
@@ -120,6 +121,9 @@ static int __init read_t2w_cmdline(char *t2w)
 	} else if (strcmp(t2w, "0") == 0) {
 		pr_info("[cmdline_t2w]: Trace2Wake disabled. | t2w='%s'\n", t2w);
 		t2w_switch = 0;
+	} else if (strcmp(t2w, "2") == 0) {
+		pr_info("[cmdline_t2w]: Trace2Wake with multi_touch enabled. | t2w='%s'\n", t2w);
+		t2w_switch = 2;
 	} else {
 		pr_info("[cmdline_t2w]: No valid input found. Going with default: | t2w='%u'\n", t2w_switch);
 	}
@@ -154,6 +158,7 @@ static void trace2wake_reset(void) {
     init = -1;
     init_x = -1;
     init_y = -1;
+    checkpoint = 0;
 }
 
 /* Trace2wake main functions */
@@ -161,16 +166,34 @@ static void detect_trace2wake_left(int x, int y)
 {
     int circle_x = (x - X_HALF) * (x - X_HALF);
 	int circle_y = circle_x + ((y - Y_MAX) * (y - Y_MAX));
+
+    if (t2w_switch == 1)
+    {
+        if ((x > (5*X_HALF/6)) && (x < (7*X_HALF/6)))
+			checkpoint = 1;
 	
-	if (!((circle_y > (LOWER_BOUND_RADIUS*LOWER_BOUND_RADIUS)) && (circle_y < (UPPER_BOUND_RADIUS*UPPER_BOUND_RADIUS))))
-	{
-		trace2wake_reset();
-	}
-	else if ((x > ((X_HALF*5)/3)) && (y > Y_INTERCEPT_AT_SIDES) && (exec_count))
-	{
-		trace2wake_pwrtrigger();
-		exec_count = false;
-	}
+	    if (!((circle_y > (LOWER_BOUND_RADIUS*LOWER_BOUND_RADIUS)) && (circle_y < (UPPER_BOUND_RADIUS*UPPER_BOUND_RADIUS))))
+	    {
+		    trace2wake_reset();
+	    }
+	    else if ((x > ((X_HALF*5)/3)) && (y > Y_INTERCEPT_AT_SIDES) && (exec_count) && (checkpoint))
+	    {
+		    trace2wake_pwrtrigger();
+		    exec_count = false;
+	    }
+    }
+    else if (t2w_switch == 2)
+    {
+        if (!((circle_y > (LOWER_BOUND_RADIUS*LOWER_BOUND_RADIUS)) && (circle_y < (UPPER_BOUND_RADIUS*UPPER_BOUND_RADIUS))))
+	        {
+		        trace2wake_reset();
+	        }
+	        else if ((x > ((X_HALF*5)/3)) && (y > Y_INTERCEPT_AT_SIDES) && (exec_count))
+	        {
+		        trace2wake_pwrtrigger();
+		        exec_count = false;
+	        }
+    }
 	
 	return;
 }
@@ -179,16 +202,34 @@ static void detect_trace2wake_right(int x, int y)
 {
     int circle_x = (x - X_HALF) * (x - X_HALF);
 	int circle_y = circle_x + ((y - Y_MAX) * (y - Y_MAX));
+
+    if (t2w_switch == 1)
+    {
+        if ((x > (5*X_HALF/6)) && (x < (7*X_HALF/6)))
+			checkpoint = 1;
 	
-	if (!((circle_y > (LOWER_BOUND_RADIUS*LOWER_BOUND_RADIUS)) && (circle_y < (UPPER_BOUND_RADIUS*UPPER_BOUND_RADIUS))))
-	{
-		trace2wake_reset();
-	}
-	else if ((x < (X_HALF/3)) && (y > Y_INTERCEPT_AT_SIDES) && (exec_count))
-	{
-		trace2wake_pwrtrigger();
-		exec_count = false;
-	}
+	    if (!((circle_y > (LOWER_BOUND_RADIUS*LOWER_BOUND_RADIUS)) && (circle_y < (UPPER_BOUND_RADIUS*UPPER_BOUND_RADIUS))))
+	    {
+		    trace2wake_reset();
+	    }
+	    else if ((x < (X_HALF/3)) && (y > Y_INTERCEPT_AT_SIDES) && (exec_count) && (checkpoint))
+	    {
+		    trace2wake_pwrtrigger();
+		    exec_count = false;
+	    }
+    }
+    else if (t2w_switch == 2)
+    {
+        if (!((circle_y > (LOWER_BOUND_RADIUS*LOWER_BOUND_RADIUS)) && (circle_y < (UPPER_BOUND_RADIUS*UPPER_BOUND_RADIUS))))
+	        {
+		        trace2wake_reset();
+	        }
+	        else if ((x < (X_HALF/3)) && (y > Y_INTERCEPT_AT_SIDES) && (exec_count) && (checkpoint))
+	        {
+		        trace2wake_pwrtrigger();
+		        exec_count = false;
+	        }
+    }
 	
 	return;
 }
@@ -394,7 +435,10 @@ static ssize_t t2w_trace2wake_dump(struct device *dev,
 			t2w_switch = 0;
 		} else if (buf[0] == '1') {
 			t2w_switch = 1;
-		}
+		} else if (buf[0] == '2') {
+            t2w_switch = 2;
+        }
+        
 	}
 
 	return count;
