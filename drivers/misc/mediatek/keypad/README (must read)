@@ -15,9 +15,10 @@ Diff 1)
  #include <linux/of_irq.h>
  #endif
 +#ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
++//whatever might be here
++#endif
 +#ifdef CONFIG_TOUCHSCREEN_TRACE2WAKE
 +#include <linux/input/trace2wake.h>
-+#endif
 +#endif
  
  #define KPD_NAME	"mtk-kpd"
@@ -33,10 +34,10 @@ Diff 2)
  #endif
  #endif
 +#ifdef CONFIG_TOUCHSCREEN_PREVENT_SLEEP
++//Whatever might be here
++#endif
 +#ifdef CONFIG_TOUCHSCREEN_TRACE2WAKE
 + trace2wake_setdev(kpd_input_dev);
-+#endif
-+
 +#endif
 +
  #ifdef KPD_KEY_MAP

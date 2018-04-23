@@ -41,7 +41,6 @@ Trust me, it sounds much more complex than it is, and way harder to trigger than
 
 3) Finally, to bake T2S, add the following lines to your device defconfig : 
 #CONFIG_TOUCHSCREEN_TRACE2WAKE=y
-#CONFIG_TOUCHSCREEN_PREVENT_SLEEP=y
 
 ** The current subdirectory readme commits are from my device Lenovo A7000 with  MT6752. It uses Mtk-tpd.c driver.
 
