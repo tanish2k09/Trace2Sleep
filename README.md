@@ -1,7 +1,6 @@
 **Trace2sleep kernel module for almost all devices**
 
-(Trace2sleep is developed by tanish2k09@xda-developers.com using knowledge of sweep2wake module by Dennis Rassmann)
-
+(Trace2sleep is developed by @tanish2k09 on xda-developers.com using knowledge of sweep2wake module by Dennis Rassmann)
 
 It is a kernel module and must be compiled into the kernel
 
@@ -46,8 +45,5 @@ Trust me, it sounds much more complex than it is, and way harder to trigger than
 
 
 
-**Credits : (all those who helped in any intentional and unintentional way)**
-1) Tanish2k09 (dat me tho)
-2) Maxr1998 (@xda-developers.com) (He helped debug)
-3) Dennis Rassmann (for giving us sweep2wake module which I studied to make this module)
-4) Linux and android devs also!
+**Extra Credits : (all those who helped in any intentional and unintentional way)**
+Dennis Rassmann (for giving us sweep2wake module which I studied to make this module)
